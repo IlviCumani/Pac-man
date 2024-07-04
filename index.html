@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+		<link rel="stylesheet" href="style.css" />
+		<link rel="icon" href="./asset/pac_the_man.png" />
+		<title>Pac-Man</title>
+	</head>
+	<body>
+		<header class="header">
+			<img class="header-img-pacman" src="./asset/pac_the_man.png" />
+			<img class="header-img-title" src="./asset/title.png" alt="" />
+		</header>
+		<dialog id="end-modal">
+			<div id="end-modal-content">
+				<h1 id="restart-text"></h1>
+				<img id="result-image" src="" alt="" />
+				<h2 id="restart-score"></h2>
+				<button id="restart-btn">Restart</button>
+			</div>
+		</dialog>
+		<div class="grid"></div>
+		<div class="game-info">
+			<h3 id="show-score">Score:<span id="score">0</span></h3>
+			<div class="lives">
+				<img id="live1" src="./asset/pac_the_man.png" />
+				<img id="live2" src="./asset/pac_the_man.png" />
+				<img id="live3" src="./asset/pac_the_man.png" />
+			</div>
+		</div>
+		<script type="module" src="app.js"></script>
+	</body>
+</html>

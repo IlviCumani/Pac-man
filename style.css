@@ -1,0 +1,243 @@
+@import url("https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap");
+
+body {
+	background-color: black;
+	background-image: url(https://images.pexels.com/photos/998641/pexels-photo-998641.jpeg?cs=srgb&dl=pexels-francesco-ungaro-998641.jpg&fm=jpg);
+	background-position: center;
+	background-size: contain;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	position: relative;
+	font-family: "Press Start 2P", system-ui;
+}
+
+.hide {
+	display: none;
+}
+
+#end-modal {
+	background-color: rgb(233, 116, 27);
+	border: 5px red solid;
+	padding: 0;
+	border-radius: 30px;
+}
+
+
+#end-modal-content {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	border: 6px solid black;
+	border-radius: 24px;
+	padding: 30px;
+}
+
+#restart-text {
+	color: yellow;
+	font-size: 40px;
+}
+
+#result-image{
+	width: 260px;
+	height: 200px;
+}
+
+#restart-btn {
+	font-family: "Press Start 2P", system-ui;
+	background-color: black;
+	border-color: yellow;
+	color: white;
+	padding: 10px 20px;
+	font-size: 15px;
+}
+
+#restart-btn:hover{
+	background-color: rgb(43, 38, 38);
+	color: yellow;
+}
+
+.header {
+	display: flex;
+	justify-content: center;
+	gap: 30px;
+	align-items: center;
+	margin: 30px 0;
+}
+
+.header-img-pacman {
+	width: 100px;
+	height: 100px;
+}
+
+.header-img-title {
+	width: 700px;
+	height: 200px;
+}
+
+.grid {
+	display: flex;
+	flex-wrap: wrap;
+	width: 1166px;
+	height: 660px;
+	border: solid black;
+}
+
+.grid div {
+	width: 22px;
+	height: 22px;
+}
+
+#show-score {
+	color: rgb(255, 255, 255);
+	font-size: 32px;
+	font-family: "Press Start 2P", system-ui;
+}
+
+.game-info {
+	width: 100%;
+	display: flex;
+	justify-content: space-evenly;
+	align-items: center;
+	margin-top: 15px;
+}
+
+.lives {
+	width: 200px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.lives img {
+	width: 50px;
+	height: 50px;
+}
+
+.pac-dot {
+	background-color: white;
+	border-radius: 50%;
+	border: 7px solid black;
+	box-sizing: border-box;
+	position: relative;
+	z-index: 0;
+}
+.ghost-lair {
+	background-color: white;
+	border-bottom: 8px solid black;
+	border-top: 8px solid black;
+	box-sizing: border-box;
+}
+
+.wall {
+	background-color: black;
+	box-sizing: border-box;
+}
+
+.left-wall {
+	border-left: 2px solid blue;
+}
+
+.right-wall {
+	border-right: 2px solid blue;
+}
+
+.top-wall {
+	border-top: 2px solid blue;
+}
+
+.bottom-wall {
+	border-bottom: 2px solid blue;
+}
+
+.power-pellet {
+	border-radius: 10px;
+	animation: powerPalletAnimation 1.5s infinite;
+}
+
+@keyframes powerPalletAnimation {
+	0% {
+		background-color: yellow;
+	}
+	100% {
+		background-color: white;
+		border: 5px solid black;
+		box-sizing: border-box;
+	}
+}
+
+.blinky {
+	background-image: url(./asset/blinky.png);
+	background-position: center;
+	background-size: contain;
+	box-sizing: border-box;
+}
+
+.pinky {
+	background-image: url(./asset/pinky.png);
+	background-position: center;
+	background-size: contain;
+	box-sizing: border-box;
+}
+
+.inky {
+	background-image: url(./asset/inky.png);
+	background-position: center;
+	background-size: contain;
+	box-sizing: border-box;
+	background-repeat: no-repeat;
+}
+
+.clyde {
+	background-image: url(./asset/clyde.png);
+	background-position: center;
+	background-size: contain;
+	box-sizing: border-box;
+}
+
+.pac-man {
+	background-image: url(./asset/pacman.png);
+	background-position: center;
+	background-size: contain;
+	box-sizing: border-box;
+	background-repeat: no-repeat;
+}
+
+.pacman-eat {
+	background-image: url(./asset/eat.png);
+	background-position: center;
+	background-size: contain;
+	box-sizing: border-box;
+	background-repeat: no-repeat;
+}
+
+.flip-pacman-horizont {
+	-webkit-transform: scaleX(-1);
+	transform: scaleX(-1);
+}
+
+.rotateUp {
+	transform: rotate(-90deg);
+}
+
+.rotateDown {
+	transform: rotate(90deg);
+}
+
+.scared-ghost {
+	background-image: url(./asset/blue_ghost.png);
+	background-position: center;
+	background-size: contain;
+	box-sizing: border-box;
+	background-repeat: no-repeat;
+}
+
+.dead-ghost {
+	background-image: url(./asset/SHIKIMI_YT.png);
+	background-position: center;
+	background-size: contain;
+	box-sizing: border-box;
+	background-repeat: no-repeat;
+}

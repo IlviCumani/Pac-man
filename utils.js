@@ -2,7 +2,7 @@ import layout from "./layout.js";
 import ActorClasses from "./actors.js";
 
 const squares = [];
-let score = 0;
+
 // const layoutt = layout
 // 	for (let i = 0; i < layout.length; i++){
 // 		for(let j = 0; j < layout[0].length; j++ ){

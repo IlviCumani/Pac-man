@@ -26,16 +26,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
 	let currLive = 0;
 	let winStatus = false;
+	const keyInputs = ['a', 'A', 'd', 'D', 's', 'S', 'w', 'W']
 
-	const PACMANSTARTROW = 28;
-	const PACMANSTARTCOL = 25;
+	const PACMAN_START_ROW = 28;
+	const PACMAN_START_COL = 25;
 
 	let score = 0;
 	const squares = createBoard(grid);
 
 	const pacmanPozition = {
-		IPosition: PACMANSTARTROW,
-		JPosition: PACMANSTARTCOL,
+		IPosition: PACMAN_START_ROW,
+		JPosition: PACMAN_START_COL,
 	};
 
 	squares[pacmanPozition.IPosition][pacmanPozition.JPosition].classList.remove(ActorClasses.PacDot);
@@ -97,20 +98,15 @@ document.addEventListener("DOMContentLoaded", () => {
 			checkForGameOver();
 		}, 120);
 	}
+
 	movePacman();
 
 	document.addEventListener("keyup", (event) => {
-		if (
-			event.key === "a" ||
-			event.key === "A" ||
-			event.key === "s" ||
-			event.key === "S" ||
-			event.key === "d" ||
-			event.key === "D" ||
-			event.key === "w" ||
-			event.key === "W"
-		)
-			keypressed = event.key;
+		for (const keyInput of keyInputs) {
+			if(event.key === keyInput)
+				keypressed = event.key;
+		}
+			
 	});
 
 	function eatPacDot() {
@@ -142,39 +138,26 @@ document.addEventListener("DOMContentLoaded", () => {
 			scoreDisplay.innerHTML = score;
 
 			ghosts.forEach((ghost) => {
-				clearInterval(ghost.candyTime);
-				if (ghost.mode !== ghost.modes.DEAD) {
-					ghost.mode = ghost.modes.CANDY;
-
-					ghost.candyTime = setTimeout(() => {
-						if (ghost.mode !== ghost.modes.DEAD && ghost.mode !== "ILVI") {
-							ghost.mode = ghost.modes.CHASE;
-							clearInterval(ghost.timerID);
-							ghost.changeMode();
-						}
-					}, 6000);
-				}
+				ghost.handleCandyMode()
 			});
 		}
 	}
 
 	setInterval(() => {
 		checkForGhostEaten();
-	}, 4);
+	}, 1);
 
 	function checkForGhostEaten() {
 		ghosts.forEach((ghost) => {
 			if (
-				ghost.mode === ghost.modes.CANDY &&
-				ghost.currentIndexI === pacmanPozition.IPosition &&
-				ghost.currentIndexJ === pacmanPozition.JPosition
+				ghost.checkForGhostEaten(pacmanPozition)
 			) {
 				if (layout[ghost.currentIndexI][ghost.currentIndexJ] === 0) {
 					squares[ghost.currentIndexI][ghost.currentIndexJ].classList.add(ActorClasses.PacDot);
 					eatPacDot();
 				}
 
-				ghost.mode = ghost.modes.DEAD;
+				ghost.setMode(ghost.modes.DEAD)
 				scoreDisplay.innerHTML = score += 100;
 			}
 		});
@@ -207,17 +190,14 @@ document.addEventListener("DOMContentLoaded", () => {
 					squares[ghost.currentIndexI][ghost.currentIndexJ].classList.add(ActorClasses.PacDot);
 				}
 
-				ghost.currentIndexI = ghost.startIndexI;
-				ghost.currentIndexJ = ghost.startIndexJ;
-				clearInterval(ghost.timerID);
-				ghost.mode = ghost.modes.CHASE;
-				ghost.changeMode();
+				ghost.resetGhost()
 			});
+
 			squares[pacmanPozition.IPosition][pacmanPozition.JPosition].classList.remove(
 				ActorClasses.Pacman,
 			);
-			pacmanPozition.IPosition = PACMANSTARTROW;
-			pacmanPozition.JPosition = PACMANSTARTCOL;
+			pacmanPozition.IPosition = PACMAN_START_ROW;
+			pacmanPozition.JPosition = PACMAN_START_COL;
 
 			squares[pacmanPozition.IPosition][pacmanPozition.JPosition].classList.add(
 				ActorClasses.Pacman,
@@ -235,8 +215,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
 	function showEndResult() {
 		ghosts.forEach((ghost) => {
-			ghost.mode = "ILVI";
-			clearInterval(ghost.timerID);
+			ghost.setMode('ILVI')
+			clearInterval(ghost.getTimeID());
 		});
 		keypressed = "";
 		modalText.innerHTML = winStatus ? "WIN" : "LOST";
@@ -269,21 +249,11 @@ document.addEventListener("DOMContentLoaded", () => {
 		keypressed = "d";
 
 		ghosts.forEach((ghost) => {
-			squares[ghost.currentIndexI][ghost.currentIndexJ].classList.remove(
-				"ghost",
-				ghost.name,
-				"scared-ghost",
-				"dead-ghost",
-			);
-			ghost.currentIndexI = ghost.startIndexI;
-			ghost.currentIndexJ = ghost.startIndexJ;
-			ghost.mode = ghost.modes.CHASE;
-			clearInterval(ghost.timerID);
-			ghost.changeMode();
+			ghost.resetGhost()
 		});
 
-		pacmanPozition.IPosition = PACMANSTARTROW;
-		pacmanPozition.JPosition = PACMANSTARTCOL;
+		pacmanPozition.IPosition = PACMAN_START_ROW;
+		pacmanPozition.JPosition = PACMAN_START_COL;
 		squares[pacmanPozition.IPosition][pacmanPozition.JPosition].classList.add(ActorClasses.Pacman);
 	}
 });

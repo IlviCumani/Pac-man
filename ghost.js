@@ -23,49 +23,13 @@ export class Ghost {
 
 	changeMode() {
 		this.timerID = setInterval(() => {
-			if (this.mode !== this.modes.CANDY && this.mode !== this.modes.DEAD)
-				this.mode = this.mode === this.modes.CHASE ? this.modes.SCATTER : this.modes.CHASE;
+			if (!(this.isCorrectMode(this.modes.CANDY) || this.isCorrectMode(this.modes.DEAD)))
+				this.setMode(this.isCorrectMode(this.modes.CHASE) ? this.modes.SCATTER : this.modes.CHASE);
 		}, 20000);
 	}
 
 	move(grid, squares, pacmanI, pacmanJ, checkForGameOver) {
-		let path;
-		switch (this.mode) {
-			case this.modes.CHASE:
-				path = this.findShortestPath(
-					this.currentIndexI,
-					this.currentIndexJ,
-					grid,
-					pacmanI,
-					pacmanJ,
-				);
-				break;
-			case this.modes.SCATTER:
-				path = this.findShortestPath(
-					this.currentIndexI,
-					this.currentIndexJ,
-					grid,
-					this.scatterTarget.pozitionI,
-					this.scatterTarget.pozitionJ,
-				);
-				break;
-			case this.modes.DEAD:
-				path = this.findShortestPath(this.currentIndexI, this.currentIndexJ, grid, this.startIndexI, this.startIndexJ);
-				break;
-			case this.modes.CANDY:
-				path = this.findShortestPath(
-					this.currentIndexI,
-					this.currentIndexJ,
-					grid,
-					this.scatterTarget.pozitionI,
-					this.scatterTarget.pozitionJ,
-				);
-				break;
-			default:
-				path = [];
-				break;
-		}
-
+		let path = this.findPathFromMode(pacmanI, pacmanJ, grid);
 		squares[this.currentIndexI][this.currentIndexJ].classList.remove(
 			"scared-ghost",
 			"ghost",
@@ -86,7 +50,11 @@ export class Ghost {
 			this.currentIndexI = nextI;
 			this.currentIndexJ = nextJ;
 
-			if (this.mode === this.modes.DEAD && this.currentIndexI === this.startIndexI && this.currentIndexJ === this.startIndexJ) {
+			if (
+				this.isCorrectMode(this.modes.DEAD) &&
+				this.currentIndexI === this.startIndexI &&
+				this.currentIndexJ === this.startIndexJ
+			) {
 				setTimeout(() => {
 					this.mode = this.modes.CHASE;
 				}, 2000);
@@ -102,9 +70,9 @@ export class Ghost {
 		}
 
 		squares[this.currentIndexI][this.currentIndexJ].classList.add(
-			this.mode === this.modes.CANDY
+			this.isCorrectMode(this.modes.CANDY)
 				? "scared-ghost"
-				: this.mode === this.modes.DEAD
+				: this.isCorrectMode(this.modes.DEAD)
 				? "dead-ghost"
 				: "ghost",
 
@@ -112,6 +80,45 @@ export class Ghost {
 		);
 
 		checkForGameOver();
+	}
+
+	findPathFromMode(pacmanI, pacmanJ, grid) {
+		switch (this.mode) {
+			case this.modes.CHASE:
+				return this.findShortestPath(
+					this.currentIndexI,
+					this.currentIndexJ,
+					grid,
+					pacmanI,
+					pacmanJ,
+				);
+			case this.modes.SCATTER:
+				return this.findShortestPath(
+					this.currentIndexI,
+					this.currentIndexJ,
+					grid,
+					this.scatterTarget.pozitionI,
+					this.scatterTarget.pozitionJ,
+				);
+			case this.modes.DEAD:
+				return this.findShortestPath(
+					this.currentIndexI,
+					this.currentIndexJ,
+					grid,
+					this.startIndexI,
+					this.startIndexJ,
+				);
+			case this.modes.CANDY:
+				return this.findShortestPath(
+					this.currentIndexI,
+					this.currentIndexJ,
+					grid,
+					this.scatterTarget.pozitionI,
+					this.scatterTarget.pozitionJ,
+				);
+			default:
+				return [];
+		}
 	}
 
 	findShortestPath(ghostRow, ghostCol, gameField, targetRow, targetCol) {
@@ -164,5 +171,78 @@ export class Ghost {
 		}
 
 		return [];
+	}
+
+	handleCandyMode() {
+		clearTimeout(this.candyTime);
+		if (!this.isCorrectMode(this.modes.DEAD)) {
+			this.mode = this.modes.CANDY;
+		}
+
+		this.candyTime = setTimeout(() => {
+			if (!(this.isCorrectMode(this.modes.DEAD) || this.isCorrectMode("ILVI"))) {
+				this.mode = this.modes.CHASE;
+				clearInterval(this.timerID);
+				this.changeMode();
+			}
+		}, 6000);
+	}
+
+	checkForGhostEaten({ IPosition, JPosition }) {
+		return (
+			this.isCorrectMode(this.modes.CANDY) &&
+			this.currentIndexI === IPosition &&
+			this.currentIndexJ === JPosition
+		);
+	}
+
+	isCorrectMode(correctMode) {
+		return this.getMode() === correctMode;
+	}
+
+	resetGhost() {
+		this.currentIndexI = this.startIndexI;
+		this.currentIndexJ = this.startIndexJ;
+		clearInterval(this.timerID);
+		this.setMode(this.modes.CHASE);
+		this.changeMode();
+	}
+
+	//? GET && SET
+	getName() {
+		return this.name;
+	}
+
+	getStartPosition() {
+		return { startRow: this.startIndexI, startCol: this.currentIndexJ };
+	}
+
+	getCurrentPosition() {
+		return { currRow: this.currentIndexI, currCol: this.currentIndexJ };
+	}
+
+	getMcQueen() {
+		return this.speed;
+	}
+
+	getMode() {
+		return this.mode;
+	}
+
+	getTimeID() {
+		return this.timerID;
+	}
+
+	getAllCSSClasses() {
+		return "ghost", "scared-ghost ", this.getName(), "dead-ghost";
+	}
+
+	setCurrentPosition(newRow, newCol) {
+		this.currentIndexI = newRow;
+		this.currentIndexJ = newCol;
+	}
+
+	setMode(mode) {
+		this.mode = mode;
 	}
 }
